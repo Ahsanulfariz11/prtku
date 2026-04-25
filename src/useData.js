@@ -16,14 +16,6 @@ export function useData() {
     return defaultData;
   });
 
-  useEffect(() => {
-    // Force reset if detecting old placeholder data to sync with new data.json
-    if (data.profile.email === 'hello@johndoe.com' || data.profile.whatsapp === '6281234567890') {
-      console.log('Dummy data detected, resetting to latest data.json...');
-      resetData();
-    }
-  }, [data]);
-
   const saveData = (newData) => {
     setData(newData);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newData));
