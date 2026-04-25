@@ -112,6 +112,25 @@ export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [formStatus, setFormStatus] = useState('idle'); // idle, sending, success, error
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setFormStatus('sending');
+    
+    // Simulate AJAX Request
+    try {
+      // In production, you would use fetch('your-endpoint', { method: 'POST', ... })
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      setFormStatus('success');
+      setFormData({ name: '', email: '', message: '' });
+      setTimeout(() => setFormStatus('idle'), 4000);
+    } catch (err) {
+      setFormStatus('error');
+      setTimeout(() => setFormStatus('idle'), 4000);
+    }
+  };
 
   // Merge data with social icons (icons can't be stored in JSON)
   const DATA = useMemo(() => ({
@@ -590,7 +609,7 @@ export default function App() {
               <p className="text-[#334155] text-xs md:text-base">Pilih jalur komunikasi yang paling nyaman untuk Anda.</p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 md:gap-6 max-w-2xl mx-auto mb-8 md:mb-12">
               {/* WhatsApp Card */}
               <motion.div 
                 whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(37, 211, 102, 0.2)" }}
@@ -632,6 +651,89 @@ export default function App() {
                   <Mail size={12} className="md:hidden" /><Mail size={16} className="hidden md:block" /> Kirim Email
                 </a>
               </motion.div>
+            </div>
+
+            {/* AJAX CONTACT FORM */}
+            <div className="max-w-2xl mx-auto">
+              <form onSubmit={handleFormSubmit} className="space-y-4 md:space-y-5 bg-white/60 p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[#BAE6FD]/40 backdrop-blur-sm">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                  <div className="space-y-1.5">
+                    <label className="text-xs md:text-sm font-semibold text-[#0F172A]">Nama Lengkap</label>
+                    <input 
+                      required
+                      type="text" 
+                      placeholder="Masukkan nama Anda"
+                      value={formData.name}
+                      onChange={e => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#0EA5E9]/40 focus:border-[#0EA5E9] outline-none transition-all text-sm"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs md:text-sm font-semibold text-[#0F172A]">Alamat Email</label>
+                    <input 
+                      required
+                      type="email" 
+                      placeholder="nama@email.com"
+                      value={formData.email}
+                      onChange={e => setFormData({ ...formData, email: e.target.value })}
+                      className="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#0EA5E9]/40 focus:border-[#0EA5E9] outline-none transition-all text-sm"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs md:text-sm font-semibold text-[#0F172A]">Pesan atau Pertanyaan</label>
+                  <textarea 
+                    required
+                    rows="4" 
+                    placeholder="Halo! Saya ingin bertanya tentang..."
+                    value={formData.message}
+                    onChange={e => setFormData({ ...formData, message: e.target.value })}
+                    className="w-full px-4 py-2.5 md:py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#0EA5E9]/40 focus:border-[#0EA5E9] outline-none transition-all text-sm resize-none"
+                  ></textarea>
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  {formStatus === 'success' ? (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="p-3 md:p-4 bg-emerald-50 text-emerald-700 rounded-xl flex items-center gap-2 md:gap-3 text-xs md:text-sm border border-emerald-100"
+                    >
+                      <CheckCircle2 size={18} />
+                      <span>Pesan Anda berhasil dikirim! Saya akan segera menghubungi Anda.</span>
+                    </motion.div>
+                  ) : formStatus === 'error' ? (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="p-3 md:p-4 bg-red-50 text-red-700 rounded-xl flex items-center gap-2 md:gap-3 text-xs md:text-sm border border-red-100"
+                    >
+                      <X size={18} />
+                      <span>Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.</span>
+                    </motion.div>
+                  ) : (
+                    <button 
+                      disabled={formStatus === 'sending'}
+                      type="submit" 
+                      className={`w-full py-3 md:py-4 rounded-xl md:rounded-2xl font-bold transition-all flex items-center justify-center gap-2 shadow-lg ${formStatus === 'sending' ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0F172A] text-white hover:bg-[#1E293B] hover:shadow-xl hover:shadow-[#0F172A]/20 active:scale-[0.98]'}`}
+                    >
+                      {formStatus === 'sending' ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                          <span>Mengirim Pesan...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send size={18} />
+                          <span>Kirim Pesan Langsung</span>
+                        </>
+                      )}
+                    </button>
+                  )}
+                </AnimatePresence>
+              </form>
             </div>
 
             <div className="mt-5 md:mt-12 pt-4 md:pt-8 border-t border-[#BAE6FD]/40 flex flex-col items-center">
