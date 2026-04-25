@@ -1,0 +1,107 @@
+{
+  "profile": {
+    "name": "Muhammad Azri Qhodroon Alfarizy",
+    "role": "Fullstack Developer",
+    "tagline": "Building modern apps with logic & vibe.",
+    "about": "Saya adalah seorang mahasiswa semester 4 yang sedang fokus mengembangkan diri sebagai Fullstack Developer dengan pendekatan vibecoding—menggabungkan logika sistem yang solid dengan desain modern yang estetik.\n\nSaya memiliki pengalaman dalam membangun berbagai project digital, mulai dari landing page, dashboard interaktif, hingga sistem informasi berbasis web. Dalam proses pengembangan, saya terbiasa mengerjakan dari sisi frontend hingga backend, termasuk perancangan database, integrasi API, serta optimasi performa aplikasi.\n\nBagi saya, sebuah aplikasi tidak hanya harus berjalan dengan baik, tetapi juga harus memberikan pengalaman pengguna yang nyaman, intuitif, dan memiliki tampilan yang modern. Karena itu, saya selalu menyeimbangkan antara aspek teknis dan estetika dalam setiap project.",
+    "email": "hello@johndoe.com",
+    "whatsapp": "6281234567890",
+    "image": "/profile.png",
+    "cv_id": "/cv-id.pdf",
+    "cv_en": "/cv-en.pdf"
+  },
+  "expertise": [
+    {
+      "category": "PROGRAMMING & FRAMEWORKS",
+      "items": [
+        { "name": "HTML5", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
+        { "name": "CSS3", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" },
+        { "name": "JavaScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
+        { "name": "PHP", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" },
+        { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+        { "name": "Next.js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
+        { "name": "Laravel", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" },
+        { "name": "Tailwind", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
+        { "name": "Bootstrap", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" },
+        { "name": "Vite", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" }
+      ]
+    },
+    {
+      "category": "TOOLS & SOFTWARE",
+      "items": [
+        { "name": "VS Code", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" },
+        { "name": "Git", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
+        { "name": "Figma", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
+        { "name": "MySQL", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" },
+        { "name": "Firebase", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
+        { "name": "Premiere Pro", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/premierepro/premierepro-original.svg" }
+      ]
+    }
+  ],
+  "educations": [
+    {
+      "year": "2024 – Sekarang",
+      "role": "Mahasiswa",
+      "company": "STMIK PPKIA TARAKANITA RAHMAWATI",
+      "desc": "Program Studi: Teknik Informatika\n• Fokus pada pengembangan software dan pemrograman\n• Aktif mengerjakan project berbasis web dan aplikasi\n• Mempelajari dasar hingga pengembangan sistem"
+    },
+    {
+      "year": "Lulusan",
+      "role": "Siswa",
+      "company": "SMA Muhammadiyah",
+      "desc": "• Menempuh pendidikan tingkat menengah atas\n• Mulai mengenal dasar teknologi dan komputer\n• Mengembangkan minat di bidang pemrograman dan IT"
+    }
+  ],
+  "experiences": [
+    {
+      "year": "2025 – Sekarang",
+      "role": "Founder & Fullstack Developer",
+      "company": "ITKU.ID",
+      "desc": "• Membangun dan mengembangkan platform ITKU.ID\n• Mendesain UI/UX dan arsitektur sistem\n• Mengelola pengembangan fitur dan konten platform"
+    },
+    {
+      "year": "2025 – Sekarang",
+      "role": "Asisten Laboratorium",
+      "company": "STMIK PPKIA TARAKANITA RAHMAWATI",
+      "desc": "• Bertanggung jawab sebagai penanggung jawab Laboratorium Robotik\n• Membimbing mahasiswa dalam praktikum pemrograman dan implementasi dasar robotik\n• Menjelaskan konsep dasar seperti HTML, CSS, JavaScript, serta logika pemrograman\n• Membantu troubleshooting dan debugging pada project mahasiswa\n• Mendukung dosen dalam pelaksanaan praktikum dan pengelolaan kegiatan laboratorium\n• Mengelola penggunaan alat dan memastikan kegiatan praktikum berjalan dengan lancar"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "E-Commerce Dashboard",
+      "desc": "Sistem manajemen inventaris dan analitik penjualan dengan antarmuka real-time.",
+      "tech": ["React", "Tailwind", "Node.js"],
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600",
+      "demo": "#",
+      "github": "#",
+      "status": "rilis"
+    },
+    {
+      "id": 2,
+      "title": "Vibe Task Manager",
+      "desc": "Aplikasi produktivitas berfokus pada flow kerja minimalis dan pengingat kustom.",
+      "tech": ["Flutter", "Firebase"],
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600",
+      "demo": "#",
+      "github": "#",
+      "status": "progress"
+    },
+    {
+      "id": 3,
+      "title": "Klinik Information System",
+      "desc": "Sistem rekam medis elektronik dan reservasi pasien terintegrasi WhatsApp.",
+      "tech": ["PHP", "MySQL", "Bootstrap"],
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600",
+      "demo": "#",
+      "github": "#",
+      "status": "konsep"
+    }
+  ],
+  "socials": [
+    { "name": "TikTok", "url": "https://www.tiktok.com/@alfrz524", "hex": "#000000" },
+    { "name": "GitHub", "url": "https://github.com/Ahsanulfariz11", "hex": "#333333" },
+    { "name": "Instagram", "url": "https://www.instagram.com/alfrz.exe/", "hex": "#E1306C" },
+    { "name": "LinkedIn", "url": "https://www.linkedin.com/in/muhammad-azri-qhodroon-alfarizy-0922042a5", "hex": "#0A66C2" }
+  ]
+}
