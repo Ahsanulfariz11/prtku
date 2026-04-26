@@ -14,27 +14,75 @@
     {
       "category": "PROGRAMMING & FRAMEWORKS",
       "items": [
-        { "name": "HTML5", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
-        { "name": "CSS3", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" },
-        { "name": "JavaScript", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
-        { "name": "PHP", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg" },
-        { "name": "React", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
-        { "name": "Next.js", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" },
-        { "name": "Laravel", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg" },
-        { "name": "Tailwind", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
-        { "name": "Bootstrap", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg" },
-        { "name": "Vite", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg" }
+        {
+          "name": "HTML5",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg"
+        },
+        {
+          "name": "CSS3",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg"
+        },
+        {
+          "name": "JavaScript",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"
+        },
+        {
+          "name": "PHP",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg"
+        },
+        {
+          "name": "React",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"
+        },
+        {
+          "name": "Next.js",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg"
+        },
+        {
+          "name": "Laravel",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg"
+        },
+        {
+          "name": "Tailwind",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg"
+        },
+        {
+          "name": "Bootstrap",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg"
+        },
+        {
+          "name": "Vite",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitejs/vitejs-original.svg"
+        }
       ]
     },
     {
       "category": "TOOLS & SOFTWARE",
       "items": [
-        { "name": "VS Code", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" },
-        { "name": "Git", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
-        { "name": "Figma", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" },
-        { "name": "MySQL", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" },
-        { "name": "Firebase", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
-        { "name": "Premiere Pro", "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/premierepro/premierepro-original.svg" }
+        {
+          "name": "VS Code",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg"
+        },
+        {
+          "name": "Git",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"
+        },
+        {
+          "name": "Figma",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg"
+        },
+        {
+          "name": "MySQL",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg"
+        },
+        {
+          "name": "Firebase",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg"
+        },
+        {
+          "name": "Premiere Pro",
+          "icon": "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/premierepro/premierepro-original.svg"
+        }
       ]
     }
   ],
@@ -69,39 +117,109 @@
   "projects": [
     {
       "id": 1,
-      "title": "E-Commerce Dashboard",
-      "desc": "Sistem manajemen inventaris dan analitik penjualan dengan antarmuka real-time.",
-      "tech": ["React", "Tailwind", "Node.js"],
-      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600",
-      "demo": "#",
+      "title": "( Konsep Website ) Evocative Space | Fast. Raw. Caffeine.",
+      "desc": "The fastest coffee bar in Tarakan. Brutalist design meets precision extraction.",
+      "tech": [
+        "Vite",
+        "React",
+        "Tailwind",
+        "Node.js"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Fevo-ruby.vercel.app%2F?w=800",
+      "demo": "https://evo-ruby.vercel.app/",
       "github": "#",
-      "status": "rilis"
+      "status": "progress"
     },
     {
       "id": 2,
-      "title": "Vibe Task Manager",
-      "desc": "Aplikasi produktivitas berfokus pada flow kerja minimalis dan pengingat kustom.",
-      "tech": ["Flutter", "Firebase"],
-      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600",
-      "demo": "#",
+      "title": "( Konsep Website ) Resto Cabe Kampung Kita - Tarakan | Nusantara Taste",
+      "desc": "Sajian nusantara otentik dengan racikan sambal khas yang bikin nagih. Nikmati suasana nyaman di pusat Kota Tarakan.",
+      "tech": [
+        "Vanilla"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Fcabe-kampung-kita.vercel.app%2F?w=800",
+      "demo": "https://cabe-kampung-kita.vercel.app/",
       "github": "#",
       "status": "progress"
     },
     {
       "id": 3,
-      "title": "Klinik Information System",
-      "desc": "Sistem rekam medis elektronik dan reservasi pasien terintegrasi WhatsApp.",
-      "tech": ["PHP", "MySQL", "Bootstrap"],
-      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=600",
-      "demo": "#",
+      "title": "( Konsep Website ) Kopi Bekawan — Friendly Modern Coffee · Tarakan",
+      "desc": "Rumah kopi modern dan bersahabat di Tarakan. Menikmati setiap koneksi dengan biji kopi pilihan sejak 2019.",
+      "tech": [
+        "Vite",
+        "React",
+        "Tailwind",
+        "Node.js"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Fbekawan.vercel.app%2F?w=800",
+      "demo": "https://bekawan.vercel.app/",
       "github": "#",
-      "status": "konsep"
+      "status": "progress"
+    },
+    {
+      "id": 4,
+      "title": "PodonPictures — Foto & Video Profesional",
+      "desc": "Pendekatan visual yang jujur, estetik, dan tak lekang oleh waktu. Kami merekam cerita Anda apa adanya, namun dengan cara terindah.",
+      "tech": [
+        "Vite",
+        "React",
+        "Tailwind",
+        "Node.js"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Fpodonpictures.my.id%2F?w=800",
+      "demo": "https://podonpictures.my.id/",
+      "github": "#",
+      "status": "rilis"
+    },
+    {
+      "id": 5,
+      "title": "Ace Poncell | Service HP, Laptop & Komputer Terpercaya",
+      "desc": "Ace Poncell melayani service HP, laptop, dan komputer cepat, bergaransi, dan transparan.",
+      "tech": [
+        "Vanilla"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Faceponcell.page.gd%2F%3Fi%3D2?w=800",
+      "demo": "https://aceponcell.page.gd/?i=2",
+      "github": "#",
+      "status": "rilis"
+    },
+    {
+      "id": 6,
+      "title": "ITku.ID - Jasa Pembuatan Website & Sistem Digital di Tarakan",
+      "desc": "Jasa pembuatan website profesional, aplikasi, dan sistem custom di Tarakan, Kalimantan Utara. Solusi digital modern untuk bisnis Anda.",
+      "tech": [
+        "Vite",
+        "React",
+        "Tailwind",
+        "Node.js"
+      ],
+      "image": "https://s.wordpress.com/mshots/v1/https%3A%2F%2Fitku.my.id%2F?w=800",
+      "demo": "https://itku.my.id/",
+      "github": "#",
+      "status": "rilis"
     }
   ],
   "socials": [
-    { "name": "TikTok", "url": "https://www.tiktok.com/@alfrz524", "hex": "#000000" },
-    { "name": "GitHub", "url": "https://github.com/Ahsanulfariz11", "hex": "#333333" },
-    { "name": "Instagram", "url": "https://www.instagram.com/alfrz.exe/", "hex": "#E1306C" },
-    { "name": "LinkedIn", "url": "https://www.linkedin.com/in/muhammad-azri-qhodroon-alfarizy-0922042a5", "hex": "#0A66C2" }
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@alfrz524",
+      "hex": "#000000"
+    },
+    {
+      "name": "GitHub",
+      "url": "https://github.com/Ahsanulfariz11",
+      "hex": "#333333"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/alfrz.exe/",
+      "hex": "#E1306C"
+    },
+    {
+      "name": "LinkedIn",
+      "url": "https://www.linkedin.com/in/muhammad-azri-qhodroon-alfarizy-0922042a5",
+      "hex": "#0A66C2"
+    }
   ]
 }

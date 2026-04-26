@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ===== Global Typography ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ===== Scrollbar Hide Utility ===== */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

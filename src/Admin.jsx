@@ -1,11 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useData } from './useData';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Save, Download, RotateCcw, Plus, Trash2, ChevronLeft,
-  User, BookOpen, Briefcase, Wrench, FolderOpen, X, Check,
-  ArrowLeft, Wand2
+  Save, Download, RotateCcw,
+  User, BookOpen, Briefcase, Wrench, FolderOpen,
+  ArrowLeft, LogOut
 } from 'lucide-react';
+
+// Import UI Components
+import Toast from './components/admin/ui/Toast';
+import AuthGate from './components/admin/ui/AuthGate';
+
+// Import Tab Components
+import ProfileTab from './components/admin/tabs/ProfileTab';
+import EducationsTab from './components/admin/tabs/EducationsTab';
+import ExperiencesTab from './components/admin/tabs/ExperiencesTab';
+import ExpertiseTab from './components/admin/tabs/ExpertiseTab';
+import ProjectsTab from './components/admin/tabs/ProjectsTab';
+
+const AUTH_SESSION_KEY = 'admin_authenticated';
 
 const TABS = [
   { id: 'profile', label: 'Profil', icon: User },
@@ -15,67 +28,28 @@ const TABS = [
   { id: 'projects', label: 'Projects', icon: FolderOpen },
 ];
 
-// Toast notification component
-function Toast({ message, show, onClose }) {
-  useEffect(() => {
-    if (show) {
-      const t = setTimeout(onClose, 2500);
-      return () => clearTimeout(t);
-    }
-  }, [show, onClose]);
-
-  return (
-    <AnimatePresence>
-      {show && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-          className="fixed top-6 right-6 z-[9999] bg-[#0F172A] text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2"
-        >
-          <Check size={18} className="text-emerald-400" />
-          <span className="text-sm font-medium">{message}</span>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-}
-
-// Input field component
-function Field({ label, value, onChange, type = 'text', placeholder = '', textarea = false, rows = 3 }) {
-  const baseClass = "w-full bg-white border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/40 focus:border-[#0EA5E9] transition-all placeholder:text-gray-400";
-  return (
-    <div>
-      <label className="block text-xs font-semibold text-[#334155] mb-1.5 uppercase tracking-wider">{label}</label>
-      {textarea ? (
-        <textarea className={baseClass} value={value} onChange={e => onChange(e.target.value)} rows={rows} placeholder={placeholder} />
-      ) : (
-        <input type={type} className={baseClass} value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} />
-      )}
-    </div>
-  );
-}
-
-// Card wrapper for list items
-function ItemCard({ children, onDelete }) {
-  return (
-    <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-5 shadow-sm relative group">
-      {onDelete && (
-        <button onClick={onDelete} className="absolute top-3 right-3 w-7 h-7 bg-red-50 text-red-400 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-100 hover:text-red-600 transition-all" title="Hapus">
-          <Trash2 size={14} />
-        </button>
-      )}
-      {children}
-    </div>
-  );
-}
-
 export default function Admin() {
-  const { data, saveData, resetData, exportJSON, defaultData } = useData();
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    () => sessionStorage.getItem(AUTH_SESSION_KEY) === 'true'
+  );
+
+  const handleLogout = () => {
+    sessionStorage.removeItem(AUTH_SESSION_KEY);
+    setIsAuthenticated(false);
+  };
+
+  if (!isAuthenticated) {
+    return <AuthGate onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
+  return <AdminPanel onLogout={handleLogout} />;
+}
+
+function AdminPanel({ onLogout }) {
+  const { data, saveData, resetData, defaultData } = useData();
   const [draft, setDraft] = useState(JSON.parse(JSON.stringify(data)));
   const [activeTab, setActiveTab] = useState('profile');
   const [toast, setToast] = useState({ show: false, message: '' });
-  const [mobileTabOpen, setMobileTabOpen] = useState(false);
   const [generatingId, setGeneratingId] = useState(null);
 
   const showToast = (message) => setToast({ show: true, message });
@@ -94,7 +68,6 @@ export default function Admin() {
   };
 
   const handleExport = () => {
-    // Export the current draft
     const blob = new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -220,36 +193,27 @@ export default function Admin() {
 
     setGeneratingId(index);
     try {
-      // Ambil metadata dari Microlink
       const response = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
       const result = await response.json();
-      
-      // Fallback URL Screenshot (WordPress mshots) jika Microlink tidak ada gambar
       const screenshotUrl = `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=800`;
       
       if (result.status === 'success') {
         const { title, description, image } = result.data;
-        
         setDraft(prev => {
           const projects = [...prev.projects];
           projects[index] = {
             ...projects[index],
             title: title || projects[index].title,
             desc: description || projects[index].desc,
-            // Prioritaskan screenshot halaman (Home look) daripada logo/OG Image
             image: screenshotUrl || image?.url
           };
           return { ...prev, projects };
         });
         showToast('Data & Thumbnail berhasil di-generate!');
       } else {
-        // Jika Microlink gagal total tapi URL valid, set minimal screenshot-nya saja
         setDraft(prev => {
           const projects = [...prev.projects];
-          projects[index] = {
-            ...projects[index],
-            image: screenshotUrl
-          };
+          projects[index] = { ...projects[index], image: screenshotUrl };
           return { ...prev, projects };
         });
         showToast('Hanya thumbnail yang berhasil di-generate.');
@@ -266,13 +230,6 @@ export default function Admin() {
 
   return (
     <div className="min-h-screen bg-[#F0F9FF] text-[#0F172A] font-sans">
-      <style dangerouslySetInnerHTML={{__html: `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap');
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Poppins', sans-serif; }
-        body { font-family: 'Inter', sans-serif; }
-        @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-      `}} />
-
       <Toast message={toast.message} show={toast.show} onClose={() => setToast({ show: false, message: '' })} />
 
       {/* Header */}
@@ -288,6 +245,9 @@ export default function Admin() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={onLogout} className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:text-red-200 rounded-lg text-xs font-medium transition-colors">
+              <LogOut size={14} /> Logout
+            </button>
             <button onClick={handleExport} className="hidden sm:flex items-center gap-1.5 px-3 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-xs font-medium transition-colors">
               <Download size={14} /> Export
             </button>
@@ -357,261 +317,36 @@ export default function Admin() {
           </div>
 
           <AnimatePresence mode="wait">
-            {/* PROFILE TAB */}
             {activeTab === 'profile' && (
-              <motion.div 
-                key="profile"
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-4"
-              >
-                <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm">
-                  <h3 className="font-heading font-semibold text-sm mb-4 text-[#0F172A] flex items-center gap-2">
-                    <User size={16} className="text-[#0EA5E9]" /> Informasi Dasar
-                  </h3>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label="Nama Lengkap" value={draft.profile.name} onChange={v => updateProfile('name', v)} />
-                    <Field label="Role / Jabatan" value={draft.profile.role} onChange={v => updateProfile('role', v)} />
-                    <div className="sm:col-span-2">
-                      <Field label="Tagline" value={draft.profile.tagline} onChange={v => updateProfile('tagline', v)} placeholder="One liner tentang diri Anda" />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <Field label="Tentang Saya" value={draft.profile.about} onChange={v => updateProfile('about', v)} textarea rows={6} />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm">
-                  <h3 className="font-heading font-semibold text-sm mb-4 text-[#0F172A] flex items-center gap-2">
-                    <Wrench size={16} className="text-[#0EA5E9]" /> Kontak & File
-                  </h3>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <Field label="Email" value={draft.profile.email} onChange={v => updateProfile('email', v)} type="email" />
-                    <Field label="WhatsApp (format: 62xxx)" value={draft.profile.whatsapp} onChange={v => updateProfile('whatsapp', v)} />
-                    <Field label="URL Foto Profil" value={draft.profile.image} onChange={v => updateProfile('image', v)} placeholder="/profile.png" />
-                    <Field label="CV Bahasa Indonesia" value={draft.profile.cv_id} onChange={v => updateProfile('cv_id', v)} placeholder="/cv-id.pdf" />
-                    <Field label="CV Bahasa Inggris" value={draft.profile.cv_en} onChange={v => updateProfile('cv_en', v)} placeholder="/cv-en.pdf" />
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-heading font-semibold text-sm text-[#0F172A] flex items-center gap-2">
-                      <FolderOpen size={16} className="text-[#0EA5E9]" /> Sosial Media
-                    </h3>
-                    <motion.button 
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setDraft(prev => ({ ...prev, socials: [...prev.socials, { name: '', url: '', hex: '#333333' }] }))} 
-                      className="flex items-center gap-1 px-3 py-1.5 bg-[#0EA5E9]/10 text-[#0EA5E9] rounded-lg text-xs font-medium hover:bg-[#0EA5E9]/20 transition-colors"
-                    >
-                      <Plus size={14} /> Tambah
-                    </motion.button>
-                  </div>
-                  <div className="space-y-3">
-                    {draft.socials.map((social, i) => (
-                      <div key={i} className="flex items-center gap-2">
-                        <input className="w-24 bg-white border border-gray-200 rounded-lg px-2.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/40" value={social.name} onChange={e => {
-                          const socials = [...draft.socials];
-                          socials[i] = { ...socials[i], name: e.target.value };
-                          setDraft(prev => ({ ...prev, socials }));
-                        }} placeholder="Nama" />
-                        <input className="flex-1 bg-white border border-gray-200 rounded-lg px-2.5 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/40" value={social.url} onChange={e => {
-                          const socials = [...draft.socials];
-                          socials[i] = { ...socials[i], url: e.target.value };
-                          setDraft(prev => ({ ...prev, socials }));
-                        }} placeholder="URL" />
-                        <input type="color" className="w-8 h-8 rounded cursor-pointer border-0" value={social.hex} onChange={e => {
-                          const socials = [...draft.socials];
-                          socials[i] = { ...socials[i], hex: e.target.value };
-                          setDraft(prev => ({ ...prev, socials }));
-                        }} />
-                        <button onClick={() => setDraft(prev => ({ ...prev, socials: prev.socials.filter((_, j) => j !== i) }))} className="w-8 h-8 bg-red-50 text-red-400 rounded-lg flex items-center justify-center hover:bg-red-100 hover:text-red-600 transition-all">
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
+              <ProfileTab draft={draft} setDraft={setDraft} updateProfile={updateProfile} />
             )}
-
-            {/* EDUCATIONS TAB */}
             {activeTab === 'educations' && (
-              <motion.div 
-                key="educations"
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-4"
-              >
-                {draft.educations.map((edu, i) => (
-                  <ItemCard key={i} onDelete={() => removeListItem('educations', i)}>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <Field label="Periode" value={edu.year} onChange={v => updateListItem('educations', i, 'year', v)} placeholder="2024 – Sekarang" />
-                      <Field label="Jabatan / Role" value={edu.role} onChange={v => updateListItem('educations', i, 'role', v)} />
-                      <Field label="Institusi" value={edu.company} onChange={v => updateListItem('educations', i, 'company', v)} />
-                      <div className="sm:col-span-2">
-                        <Field label="Deskripsi" value={edu.desc} onChange={v => updateListItem('educations', i, 'desc', v)} textarea rows={4} />
-                      </div>
-                    </div>
-                  </ItemCard>
-                ))}
-                <motion.button 
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={() => addListItem('educations', { year: '', role: '', company: '', desc: '' })} 
-                  className="w-full py-3 border-2 border-dashed border-[#BAE6FD] rounded-xl text-sm font-medium text-[#0EA5E9] hover:bg-[#0EA5E9]/5 transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Tambah Pendidikan
-                </motion.button>
-              </motion.div>
+              <EducationsTab draft={draft} removeListItem={removeListItem} updateListItem={updateListItem} addListItem={addListItem} />
             )}
-
-            {/* EXPERIENCES TAB */}
             {activeTab === 'experiences' && (
-              <motion.div 
-                key="experiences"
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-4"
-              >
-                {draft.experiences.map((exp, i) => (
-                  <ItemCard key={i} onDelete={() => removeListItem('experiences', i)}>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <Field label="Periode" value={exp.year} onChange={v => updateListItem('experiences', i, 'year', v)} placeholder="2025 – Sekarang" />
-                      <Field label="Jabatan / Role" value={exp.role} onChange={v => updateListItem('experiences', i, 'role', v)} />
-                      <Field label="Perusahaan" value={exp.company} onChange={v => updateListItem('experiences', i, 'company', v)} />
-                      <div className="sm:col-span-2">
-                        <Field label="Deskripsi" value={exp.desc} onChange={v => updateListItem('experiences', i, 'desc', v)} textarea rows={4} />
-                      </div>
-                    </div>
-                  </ItemCard>
-                ))}
-                <motion.button 
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={() => addListItem('experiences', { year: '', role: '', company: '', desc: '' })} 
-                  className="w-full py-3 border-2 border-dashed border-[#BAE6FD] rounded-xl text-sm font-medium text-[#0EA5E9] hover:bg-[#0EA5E9]/5 transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Tambah Pengalaman
-                </motion.button>
-              </motion.div>
+              <ExperiencesTab draft={draft} removeListItem={removeListItem} updateListItem={updateListItem} addListItem={addListItem} />
             )}
-
-            {/* EXPERTISE TAB */}
             {activeTab === 'expertise' && (
-              <motion.div 
-                key="expertise"
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-6"
-              >
-                {draft.expertise.map((cat, catIdx) => (
-                  <div key={catIdx} className="bg-white rounded-xl border border-gray-100 p-4 md:p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-4">
-                      <input className="font-heading font-bold text-sm text-[#0F172A] bg-transparent border-0 focus:ring-b-2 focus:ring-[#0EA5E9] p-0" value={cat.category} onChange={e => updateExpertiseCategory(catIdx, e.target.value)} />
-                      <button onClick={() => removeExpertiseCategory(catIdx)} className="text-red-400 hover:text-red-600 transition-colors">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                      {cat.items.map((item, itemIdx) => (
-                        <div key={itemIdx} className="flex flex-col gap-2 p-3 bg-gray-50 rounded-lg relative group">
-                          <button onClick={() => removeExpertiseItem(catIdx, itemIdx)} className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 text-red-400 hover:text-red-600 transition-all">
-                            <Trash2 size={12} />
-                          </button>
-                          <Field label="Nama Tool" value={item.name} onChange={v => updateExpertiseItem(catIdx, itemIdx, 'name', v)} />
-                          <Field label="URL Icon" value={item.icon} onChange={v => updateExpertiseItem(catIdx, itemIdx, 'icon', v)} placeholder="e.g. https://cdn..." />
-                        </div>
-                      ))}
-                      <button onClick={() => addExpertiseItem(catIdx)} className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-lg p-4 text-xs font-medium text-gray-400 hover:border-[#BAE6FD] hover:text-[#0EA5E9] transition-all">
-                        <Plus size={14} /> Item
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <motion.button 
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={addExpertiseCategory} 
-                  className="w-full py-3 border-2 border-dashed border-[#BAE6FD] rounded-xl text-sm font-medium text-[#0EA5E9] hover:bg-[#0EA5E9]/5 transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Tambah Kategori Baru
-                </motion.button>
-              </motion.div>
+              <ExpertiseTab 
+                draft={draft} 
+                updateExpertiseCategory={updateExpertiseCategory} 
+                removeExpertiseCategory={removeExpertiseCategory} 
+                updateExpertiseItem={updateExpertiseItem} 
+                removeExpertiseItem={removeExpertiseItem} 
+                addExpertiseItem={addExpertiseItem} 
+                addExpertiseCategory={addExpertiseCategory} 
+              />
             )}
-
-            {/* PROJECTS TAB */}
             {activeTab === 'projects' && (
-              <motion.div 
-                key="projects"
-                initial={{ opacity: 0, scale: 0.98, y: 10 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.98, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="space-y-4"
-              >
-                {draft.projects.map((project, i) => (
-                  <ItemCard key={i} onDelete={() => removeListItem('projects', i)}>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="sm:col-span-2 flex justify-between items-center mb-1">
-                        <h4 className="text-xs font-bold text-[#0EA5E9] uppercase tracking-widest">Project #{i + 1}</h4>
-                        <motion.button 
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => autoFillProject(i)} 
-                          disabled={generatingId === i} 
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${generatingId === i ? 'bg-gray-100 text-gray-400' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'}`}
-                        >
-                          {generatingId === i ? (
-                            <>
-                              <div className="w-3 h-3 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                              Generating...
-                            </>
-                          ) : (
-                            <>
-                              <Wand2 size={13} />
-                              Auto-Generate
-                            </>
-                          )}
-                        </motion.button>
-                      </div>
-                      <Field label="Judul Project" value={project.title} onChange={v => updateProject(i, 'title', v)} />
-                      <div>
-                        <label className="block text-xs font-semibold text-[#334155] mb-1.5 uppercase tracking-wider">Status</label>
-                        <select className="w-full bg-white border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-[#0F172A] focus:outline-none focus:ring-2 focus:ring-[#0EA5E9]/40 transition-all" value={project.status} onChange={e => updateProject(i, 'status', e.target.value)}>
-                          <option value="rilis">Udah Rilis</option>
-                          <option value="progress">Dikerjakan</option>
-                          <option value="konsep">Konsep</option>
-                        </select>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <Field label="Deskripsi" value={project.desc} onChange={v => updateProject(i, 'desc', v)} textarea rows={3} />
-                      </div>
-                      <Field label="Tags / Tech (pisah koma)" value={project.tech.join(', ')} onChange={v => updateProjectTech(i, v)} placeholder="Vite, React, Tailwind" />
-                      <Field label="URL Thumbnail" value={project.image} onChange={v => updateProject(i, 'image', v)} />
-                      <Field label="URL Demo" value={project.demo} onChange={v => updateProject(i, 'demo', v)} placeholder="https://..." />
-                      <Field label="URL GitHub" value={project.github} onChange={v => updateProject(i, 'github', v)} placeholder="https://github.com/..." />
-                    </div>
-                  </ItemCard>
-                ))}
-                <motion.button 
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  onClick={addProject} 
-                  className="w-full py-3 border-2 border-dashed border-[#BAE6FD] rounded-xl text-sm font-medium text-[#0EA5E9] hover:bg-[#0EA5E9]/5 transition-all flex items-center justify-center gap-2"
-                >
-                  <Plus size={16} /> Tambah Project
-                </motion.button>
-              </motion.div>
+              <ProjectsTab 
+                draft={draft} 
+                removeListItem={removeListItem} 
+                updateProject={updateProject} 
+                generatingId={generatingId} 
+                autoFillProject={autoFillProject} 
+                updateProjectTech={updateProjectTech} 
+                addProject={addProject} 
+              />
             )}
           </AnimatePresence>
 
